@@ -22,8 +22,9 @@ entryPoint = "https"
 onDemand = false
 OnHostRule = true
   # Use a HTTP-01 acme challenge rather than TLS-SNI-01 challenge
-  [acme.httpChallenge]
-  entryPoint = "http"
+  [acme.dnsChallenge]
+    provider = "digitalocean"
+    delayBeforeCheck = 0
 
 [file]
 [backends]
@@ -38,4 +39,4 @@ OnHostRule = true
     [frontends.django.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.django.routes.dr1]
-      rule = "Host:example.com"
+      rule = "Host:*.dd.reckonsys.xyz"
