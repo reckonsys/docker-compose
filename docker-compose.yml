@@ -1,0 +1,58 @@
+version: '3'
+
+volumes:
+  traefik_acme: {}
+  pg_data: {}
+  rabbitmq_data: {}
+
+services:
+  backend: &backend
+    restart: always
+    build: ./backend
+    expose:
+      - "8000"
+    links:
+      - postgres:postgres
+      - rabbitmq:rabbitmq
+    env_file: .env
+    command: /usr/local/bin/gunicorn -bind 0.0.0.0:8000 wsgi
+
+  frontend:
+    restart: never
+    build: ./backend
+    volumes:
+      - traefik_frontend:/usr/src/app/dist
+
+  worker:
+    <<: *backend
+    command: /start-worker
+
+  traefik:
+    build: ./traefik
+    depends_on:
+      - backend
+      - frontend
+      - worker
+    volumes:
+      - traefik_acme:/etc/traefik/acme
+      - traefik_frontend:/etc/traefik/acme/dist
+    ports:
+      - "80"
+      - "443"
+        # - "0.0.0.0:443:443"
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:latest
+    ports:
+      - "5672"
+    volumes:
+      - rabbitmq_data:/data
