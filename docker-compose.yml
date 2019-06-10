@@ -1,9 +1,10 @@
 version: '3'
 
 volumes:
-  traefik_acme: {}
   pg_data: {}
+  traefik_acme: {}
   rabbitmq_data: {}
+  traefik_frontend: {}
 
 services:
   backend: &backend
@@ -15,11 +16,10 @@ services:
       - postgres:postgres
       - rabbitmq:rabbitmq
     env_file: .env
-    command: /usr/local/bin/gunicorn -bind 0.0.0.0:8000 wsgi
+    command: gunicorn -bind 0.0.0.0:8000 wsgi
 
   frontend:
-    restart: never
-    build: ./backend
+    build: ./frontend
     volumes:
       - traefik_frontend:/usr/src/app/dist
 
