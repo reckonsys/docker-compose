@@ -16,7 +16,7 @@ services:
       - postgres:postgres
       - rabbitmq:rabbitmq
     env_file: .env
-    command: gunicorn -bind 0.0.0.0:8000 wsgi
+    command: pipenv run gunicorn -bind 0.0.0.0:8000 wsgi
 
   frontend:
     build: ./frontend
