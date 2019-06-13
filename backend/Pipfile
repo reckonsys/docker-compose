@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 flake8 = "*"
 neovim = "*"
+ipython = "*"
+gunicorn = "*"
 
 [packages]
 flask = "*"
