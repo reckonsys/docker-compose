@@ -1,6 +1,21 @@
 logLevel = "INFO"
 defaultEntryPoints = ["http", "https"]
 
+[Global]
+   debug = true
+
+[log]
+level = "DEBUG"
+
+[accessLog]
+# format = "json"
+
+[api]
+entryPoint = "traefik"
+# dashboard = true
+
+[ping]
+
 # Entrypoints, http and https
 [entryPoints]
   # http should be redirected to https
@@ -13,30 +28,40 @@ defaultEntryPoints = ["http", "https"]
   address = ":443"
     [entryPoints.https.tls]
 
+
+[file]
+[backends]
+  [backends.backend]
+    [backends.backend.servers.server1]
+      url = "http://backend:5000"
+
+[frontends]
+  [frontends.frontend]
+    backend = "backend"
+    passHostHeader = true
+    [frontends.frontend.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.frontend.routes.dr1]
+      rule = "Host:*.dd.reckonsys.xyz"
+
 # Enable ACME (Let's Encrypt): automatic SSL
 [acme]
 # Email address used for registration
 email = "dhilip@reckonsys.com"
 storage = "/etc/traefik/acme/acme.json"
 entryPoint = "https"
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 onDemand = false
-OnHostRule = true
+# OnHostRule = true
   # Use a HTTP-01 acme challenge rather than TLS-SNI-01 challenge
   [acme.dnsChallenge]
     provider = "digitalocean"
     delayBeforeCheck = 0
 
-[file]
-[backends]
-  [backends.django]
-    [backends.django.servers.server1]
-      url = "http://django:5000"
 
-[frontends]
-  [frontends.django]
-    backend = "django"
-    passHostHeader = true
-    [frontends.django.headers]
-      HostsProxyHeaders = ['X-CSRFToken']
-    [frontends.django.routes.dr1]
-      rule = "Host:*.dd.reckonsys.xyz"
+[[acme.domains]]
+  # main = "*.local1.com"
+  main = "dd.reckonsys.xyz"
+
+[[acme.domains]]
+  main = "*.dd.reckonsys.xyz"

@@ -7,9 +7,9 @@ verify_ssl = true
 flake8 = "*"
 neovim = "*"
 ipython = "*"
-gunicorn = "*"
 
 [packages]
+gunicorn = "*"
 flask = "*"
 
 [requires]

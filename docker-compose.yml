@@ -4,7 +4,6 @@ volumes:
   pg_data: {}
   traefik_acme: {}
   rabbitmq_data: {}
-  traefik_frontend: {}
 
 services:
   backend: &backend
@@ -18,25 +17,17 @@ services:
     env_file: .env
     command: pipenv run gunicorn -b :5000 wsgi:app
 
-  frontend:
-    build: ./frontend
-    volumes:
-      - traefik_frontend:/usr/src/app/dist
-
   worker:
     <<: *backend
     # command: /start-worker
-    command: gunicorn -bind 0.0.0.0:8000 wsgi
+    command: pipenv run gunicorn -bind 0.0.0.0:8000 wsgi
 
   traefik:
     build: ./traefik
     depends_on:
       - backend
-      - frontend
-      - worker
     volumes:
       - traefik_acme:/etc/traefik/acme
-      - traefik_frontend:/etc/traefik/acme/dist
     ports:
       - "80"
       - "443"
