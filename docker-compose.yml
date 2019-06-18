@@ -2,10 +2,11 @@ version: '3'
 
 volumes:
   pg_data: {}
-  traefik_acme: {}
   rabbitmq_data: {}
+  traefik_acme: {}
 
 services:
+
   backend: &backend
     restart: always
     build: ./backend
@@ -14,20 +15,28 @@ services:
     links:
       - postgres:postgres
       - rabbitmq:rabbitmq
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:backend.dd.reckonsys.xyz"
     env_file: .env
-    command: pipenv run gunicorn -b :5000 wsgi:app
+    command: gunicorn -b :5000 wsgi:app
 
   worker:
     <<: *backend
     # command: /start-worker
-    command: pipenv run gunicorn -bind 0.0.0.0:8000 wsgi
+    command: gunicorn -b :8000 wsgi:app
 
   traefik:
+    image: traefik:v2.0.0-alpha4
+    command: --api --docker
+    env_file: .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # - traefik_toml:/traefik.toml
+      # - traefik_acme:/etc/traefik/acme/acme.json
     build: ./traefik
     depends_on:
       - backend
-    volumes:
-      - traefik_acme:/etc/traefik/acme
     ports:
       - "80"
       - "443"

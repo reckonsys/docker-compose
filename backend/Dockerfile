@@ -1,5 +1,4 @@
-FROM reckonsys/python:latest
-COPY Pipfile Pipfile
-COPY Pipfile.lock Pipfile.lock
-RUN pipenv install
+# FROM reckonsys/python:latest
+FROM python:3.7-slim
 COPY . .
+RUN pip install -r requirements.txt
