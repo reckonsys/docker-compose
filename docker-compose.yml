@@ -26,21 +26,35 @@ services:
     # command: /start-worker
     command: gunicorn -b :8000 wsgi:app
 
+#  traefik:
+#    image: traefik
+#    command: --api --docker
+#    env_file: .env
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      # - traefik_toml:/traefik.toml
+#      # - traefik_acme:/etc/traefik/acme/acme.json
+#    build: ./traefik
+#    depends_on:
+#      - backend
+#    ports:
+#      - "80"
+#      - "443"
+#        # - "0.0.0.0:443:443"
+
   traefik:
-    image: traefik:v2.0.0-alpha4
-    command: --api --docker
-    env_file: .env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      # - traefik_toml:/traefik.toml
-      # - traefik_acme:/etc/traefik/acme/acme.json
-    build: ./traefik
+    build: 'traefik'
+    #   context: .
+    #   dockerfile: ./traefik/Dockerfile
+    image: traefik
     depends_on:
       - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "80"
-      - "443"
-        # - "0.0.0.0:443:443"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+
 
   postgres:
     restart: always

@@ -45,7 +45,7 @@ dashboard = true
   [frontends.frontend]
   backend = "backend"
     [frontends.frontend.routes.backend]
-    rule = "Host:backend.dd.reckonsys.xyz"
+    rule = "Host:127.0.0.1"
 
 
 
