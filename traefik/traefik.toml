@@ -4,7 +4,7 @@ defaultEntryPoints = ["http", "https"]
 [retry]
 
 [docker]
-exposedByDefault = true
+exposedByDefault = false
 
 
 [Global]
@@ -41,11 +41,11 @@ dashboard = true
     [backends.backend.servers.server1]
       url = "http://backend:5000"
 
-[frontends]
-  [frontends.frontend]
-  backend = "backend"
-    [frontends.frontend.routes.backend]
-    rule = "Host:local.dev"
+# [frontends]
+#   [frontends.frontend]
+#   backend = "backend"
+#     [frontends.frontend.routes.backend]
+#     rule = "Host:local.dev"
 
 
 
@@ -62,3 +62,15 @@ dashboard = true
 #   [acme.dnsChallenge]
 #     provider = "digitalocean"
 #     delayBeforeCheck = 0
+
+[acme]
+email = "dhilip@reckonsys.com"
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+acmeLogging = true
+onHostRule = true
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+# Default: "https://acme-v02.api.letsencrypt.org/directory"
+
+  [acme.dnsChallenge]
+  provider = "digitalocean"

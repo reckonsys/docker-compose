@@ -17,7 +17,7 @@ services:
       - rabbitmq:rabbitmq
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:backend.dd.reckonsys.xyz"
+      - "traefik.frontend.rule=Host:foo.reckonsys.xyz"
     env_file: .env
     command: gunicorn -b :5000 wsgi:app
 
@@ -51,6 +51,7 @@ services:
       - backend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file: .env
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
