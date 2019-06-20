@@ -17,7 +17,8 @@ services:
       - rabbitmq:rabbitmq
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:foo.reckonsys.xyz"
+      - "traefik.frontend.rule=Host:${BACKEND_DOMAIN}"
+      - "traefik.backend.domain=${BACKEND_DOMAIN}"
     env_file: .env
     command: gunicorn -b :5000 wsgi:app
 
