@@ -41,28 +41,6 @@ dashboard = true
     [backends.backend.servers.server1]
       url = "http://backend:5000"
 
-# [frontends]
-#   [frontends.frontend]
-#   backend = "backend"
-#     [frontends.frontend.routes.backend]
-#     rule = "Host:local.dev"
-
-
-
-# Enable ACME (Let's Encrypt): automatic SSL
-# [acme]
-# Email address used for registration
-# email = "dhilip@reckonsys.com"
-# storage = "/etc/traefik/acme/acme.json"
-# entryPoint = "https"
-# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
-# onDemand = false
-# OnHostRule = true
-#   # Use a HTTP-01 acme challenge rather than TLS-SNI-01 challenge
-#   [acme.dnsChallenge]
-#     provider = "digitalocean"
-#     delayBeforeCheck = 0
-
 [acme]
 email = "dhilip@reckonsys.com"
 storage = "/etc/traefik/acme/acme.json"
